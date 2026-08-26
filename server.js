@@ -5,23 +5,13 @@ const path = require("path");
 const app = express();
 const PORT = 3000;
 
-// =========================
-// Configurações
-// =========================
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Servir arquivos do frontend
 app.use(express.static(path.join(__dirname, "public")));
-
-// =========================
-// Banco de dados
-// =========================
 
 const db = new Database("./database/musica.db");
 
-// Criar tabela caso ela ainda não exista
 db.prepare(`
     CREATE TABLE IF NOT EXISTS suggestions (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -32,7 +22,6 @@ db.prepare(`
     )
 `).run();
 
-// Adiciona a coluna status caso ela ainda não exista
 const columns = db.prepare(`
     PRAGMA table_info(suggestions)
 `).all();
@@ -48,16 +37,10 @@ if (!hasStatusColumn) {
     console.log("Coluna status adicionada à tabela suggestions.");
 }
 
-// =========================
-// Rotas
-// =========================
-
-// Receber uma sugestão
 app.post("/api/suggestions", (req, res) => {
 
     const { music, username } = req.body;
 
-    // Validação
     if (!music || !username) {
         return res.status(400).json({
             success: false,
@@ -94,7 +77,6 @@ app.post("/api/suggestions", (req, res) => {
     }
 });
 
-// Buscar todas as sugestões
 app.get("/api/suggestions", (req, res) => {
 
     try {
@@ -121,15 +103,10 @@ app.get("/api/suggestions", (req, res) => {
     }
 });
 
-// =========================
-// Iniciar servidor
-// =========================
-
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
 
-// Alterar status de uma sugestão
 app.patch("/api/suggestions/:id", (req, res) => {
 
     const { id } = req.params;
