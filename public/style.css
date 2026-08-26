@@ -1,0 +1,458 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    background: #121212;
+    color: #ffffff;
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+}
+
+.card {
+    background: #1e1e1e;
+
+    padding: 40px;
+
+    border-radius: 16px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+h1 {
+    text-align: center;
+
+    font-size: 32px;
+
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    text-align: center;
+
+    color: #b3b3b3;
+
+    line-height: 1.5;
+
+    margin-bottom: 30px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+
+    margin-bottom: 20px;
+}
+
+label {
+    font-size: 14px;
+
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+
+    padding: 14px;
+
+    border: 1px solid #444;
+    border-radius: 8px;
+
+    background: #2a2a2a;
+    color: #ffffff;
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition: border-color 0.2s;
+}
+
+input::placeholder {
+    color: #777;
+}
+
+input:focus {
+    border-color: #1db954;
+}
+
+button {
+    width: 100%;
+
+    padding: 14px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #1db954;
+    color: #ffffff;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: background 0.2s, transform 0.1s;
+}
+
+button:hover {
+    background: #1ed760;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+.message {
+    margin-top: 20px;
+
+    text-align: center;
+
+    font-size: 14px;
+
+    min-height: 20px;
+}
+
+.message.success {
+    color: #1db954;
+}
+
+.message.error {
+    color: #ff5555;
+}
+
+#suggestions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.suggestion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 16px;
+
+    background: #2a2a2a;
+
+    border-radius: 10px;
+}
+
+.suggestion-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.suggestion-info strong {
+    font-size: 16px;
+}
+
+.suggestion-info span {
+    color: #aaa;
+    font-size: 14px;
+}
+
+.status {
+    width: fit-content;
+
+    padding: 4px 8px;
+
+    border-radius: 6px;
+
+    font-size: 12px !important;
+    font-weight: bold;
+}
+
+.status.pending {
+    background: #5c4b00;
+    color: #ffd83d !important;
+}
+
+.status.accepted {
+    background: #164d2a;
+    color: #1ed760 !important;
+}
+
+.status.rejected {
+    background: #541b1b;
+    color: #ff6666 !important;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+}
+
+.actions button {
+    width: auto;
+
+    padding: 8px 12px;
+
+    font-size: 13px;
+}
+
+.actions .accept {
+    background: #1db954;
+}
+
+.actions .reject {
+    background: #d93636;
+}
+
+.actions .reject:hover {
+    background: #f04444;
+}
+
+.empty {
+    text-align: center;
+    color: #888;
+}
+
+.error {
+    text-align: center;
+    color: #ff5555;
+}
+
+/* =========================
+   CONTADORES
+========================= */
+
+.counters {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 10px;
+
+    margin-bottom: 35px;
+}
+
+.counter {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 15px 10px;
+
+    background: #2a2a2a;
+
+    border-radius: 10px;
+}
+
+.counter strong {
+    font-size: 25px;
+}
+
+.counter span {
+    font-size: 13px;
+
+    color: #aaa;
+}
+
+.pending-counter strong {
+    color: #ffd83d;
+}
+
+.accepted-counter strong {
+    color: #1ed760;
+}
+
+.rejected-counter strong {
+    color: #ff5555;
+}
+
+
+/* =========================
+   SEÇÕES
+========================= */
+
+.suggestion-section {
+    margin-top: 30px;
+}
+
+.suggestion-section h2 {
+    font-size: 20px;
+
+    margin-bottom: 15px;
+}
+
+
+/* =========================
+   SUGESTÃO
+========================= */
+
+.suggestion {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 16px;
+
+    margin-bottom: 10px;
+
+    background: #2a2a2a;
+
+    border-radius: 10px;
+}
+
+.suggestion-info {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+    min-width: 0;
+}
+
+.suggestion-info strong {
+    font-size: 16px;
+
+    overflow-wrap: anywhere;
+}
+
+.suggestion-info span {
+    color: #aaa;
+
+    font-size: 14px;
+}
+
+.suggestion-info small {
+    color: #666;
+
+    font-size: 12px;
+}
+
+
+/* =========================
+   BOTÕES
+========================= */
+
+.actions {
+    display: flex;
+
+    gap: 8px;
+
+    flex-shrink: 0;
+}
+
+.actions button {
+    width: auto;
+
+    padding: 8px 12px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    color: white;
+
+    font-size: 13px;
+
+    cursor: pointer;
+}
+
+.actions .accept {
+    background: #1db954;
+}
+
+.actions .accept:hover {
+    background: #1ed760;
+}
+
+.actions .reject {
+    background: #d93636;
+}
+
+.actions .reject:hover {
+    background: #f04444;
+}
+
+.actions .reset {
+    background: #555;
+}
+
+.actions .reset:hover {
+    background: #666;
+}
+
+
+/* =========================
+   MENSAGENS
+========================= */
+
+.empty {
+    padding: 15px;
+
+    text-align: center;
+
+    color: #777;
+
+    background: #242424;
+
+    border-radius: 8px;
+}
+
+.error {
+    color: #ff5555;
+
+    text-align: center;
+}
+
+
+/* =========================
+   RESPONSIVIDADE
+========================= */
+
+@media (max-width: 600px) {
+
+    .card {
+        padding: 25px;
+    }
+
+    .counters {
+        grid-template-columns: 1fr;
+    }
+
+    .suggestion {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .actions {
+        width: 100%;
+    }
+
+    .actions button {
+        flex: 1;
+    }
+
+}

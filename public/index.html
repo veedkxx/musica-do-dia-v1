@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Música do Dia</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="container">
+
+        <section class="card">
+
+            <h1>Música do Dia</h1>
+
+            <p class="subtitle">
+                Sugira uma música para fazer parte do próximo Música do Dia.
+            </p>
+
+            <form id="suggestionForm">
+
+                <div class="form-group">
+                    <label for="music">Música</label>
+
+                    <input
+                        type="text"
+                        id="music"
+                        name="music"
+                        placeholder="Digite o nome da música"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Seu nome</label>
+
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Digite seu nome ou usuário"
+                        required
+                    >
+                </div>
+
+                <button type="submit">
+                    Enviar sugestão
+                </button>
+
+            </form>
+
+            <p id="message" class="message"></p>
+
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

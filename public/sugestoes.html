@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sugestões - Música do Dia</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="container">
+
+        <section class="card">
+
+            <h1>Sugestões</h1>
+
+            <p class="subtitle">
+                Gerencie as músicas enviadas para o Música do Dia.
+            </p>
+
+
+            <!-- CONTADORES -->
+
+            <div class="counters">
+
+                <div class="counter pending-counter">
+                    <strong id="pendingCount">0</strong>
+                    <span>Pendentes</span>
+                </div>
+
+                <div class="counter accepted-counter">
+                    <strong id="acceptedCount">0</strong>
+                    <span>Aceitas</span>
+                </div>
+
+                <div class="counter rejected-counter">
+                    <strong id="rejectedCount">0</strong>
+                    <span>Recusadas</span>
+                </div>
+
+            </div>
+
+
+            <!-- PENDENTES -->
+
+            <section class="suggestion-section">
+
+                <h2>
+                    🟡 Pendentes
+                </h2>
+
+                <div id="pendingSuggestions">
+                    <p class="empty">
+                        Carregando...
+                    </p>
+                </div>
+
+            </section>
+
+
+            <!-- ACEITAS -->
+
+            <section class="suggestion-section">
+
+                <h2>
+                    🟢 Aceitas
+                </h2>
+
+                <div id="acceptedSuggestions">
+                    <p class="empty">
+                        Carregando...
+                    </p>
+                </div>
+
+            </section>
+
+
+            <!-- RECUSADAS -->
+
+            <section class="suggestion-section">
+
+                <h2>
+                    🔴 Recusadas
+                </h2>
+
+                <div id="rejectedSuggestions">
+                    <p class="empty">
+                        Carregando...
+                    </p>
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+
+    <script>
+
+        async function loadSuggestions() {
+
+            try {
+
+                const response =
+                    await fetch("/api/suggestions");
+
+                const data =
+                    await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(
+                        data.message ||
+                        "Erro ao buscar sugestões."
+                    );
+                }
+
+
+                // Limpar listas
+
+                document.getElementById(
+                    "pendingSuggestions"
+                ).innerHTML = "";
+
+                document.getElementById(
+                    "acceptedSuggestions"
+                ).innerHTML = "";
+
+                document.getElementById(
+                    "rejectedSuggestions"
+                ).innerHTML = "";
+
+
+                // Contadores
+
+                let pending = 0;
+                let accepted = 0;
+                let rejected = 0;
+
+
+                data.suggestions.forEach(
+                    suggestion => {
+
+                        if (
+                            suggestion.status ===
+                            "pending"
+                        ) {
+                            pending++;
+
+                            addSuggestion(
+                                "pendingSuggestions",
+                                suggestion
+                            );
+                        }
+
+
+                        else if (
+                            suggestion.status ===
+                            "accepted"
+                        ) {
+                            accepted++;
+
+                            addSuggestion(
+                                "acceptedSuggestions",
+                                suggestion
+                            );
+                        }
+
+
+                        else if (
+                            suggestion.status ===
+                            "rejected"
+                        ) {
+                            rejected++;
+
+                            addSuggestion(
+                                "rejectedSuggestions",
+                                suggestion
+                            );
+                        }
+
+                    }
+                );
+
+
+                // Atualizar contadores
+
+                document.getElementById(
+                    "pendingCount"
+                ).textContent = pending;
+
+                document.getElementById(
+                    "acceptedCount"
+                ).textContent = accepted;
+
+                document.getElementById(
+                    "rejectedCount"
+                ).textContent = rejected;
+
+
+                // Mensagens quando não há sugestões
+
+                showEmptyMessage(
+                    "pendingSuggestions",
+                    pending,
+                    "Nenhuma sugestão pendente."
+                );
+
+                showEmptyMessage(
+                    "acceptedSuggestions",
+                    accepted,
+                    "Nenhuma música aceita ainda."
+                );
+
+                showEmptyMessage(
+                    "rejectedSuggestions",
+                    rejected,
+                    "Nenhuma música recusada."
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                document.getElementById(
+                    "pendingSuggestions"
+                ).innerHTML =
+                    `<p class="error">
+                        Não foi possível carregar as sugestões.
+                    </p>`;
+
+            }
+
+        }
+
+
+        function addSuggestion(
+            containerId,
+            suggestion
+        ) {
+
+            const container =
+                document.getElementById(containerId);
+
+
+            const item =
+                document.createElement("div");
+
+            item.className = "suggestion";
+
+
+            const info =
+                document.createElement("div");
+
+            info.className = "suggestion-info";
+
+
+            const music =
+                document.createElement("strong");
+
+            music.textContent =
+                suggestion.music;
+
+
+            const username =
+                document.createElement("span");
+
+            username.textContent =
+                `sugerida por ${suggestion.username}`;
+
+
+            const date =
+                document.createElement("small");
+
+            date.textContent =
+                formatDate(
+                    suggestion.created_at
+                );
+
+
+            info.appendChild(music);
+            info.appendChild(username);
+            info.appendChild(date);
+
+
+            const actions =
+                document.createElement("div");
+
+            actions.className = "actions";
+
+
+            // PENDENTE
+
+            if (
+                suggestion.status ===
+                "pending"
+            ) {
+
+                const acceptButton =
+                    createButton(
+                        "✓ Aceitar",
+                        "accept",
+                        () => updateStatus(
+                            suggestion.id,
+                            "accepted"
+                        )
+                    );
+
+
+                const rejectButton =
+                    createButton(
+                        "✕ Recusar",
+                        "reject",
+                        () => updateStatus(
+                            suggestion.id,
+                            "rejected"
+                        )
+                    );
+
+
+                actions.appendChild(
+                    acceptButton
+                );
+
+                actions.appendChild(
+                    rejectButton
+                );
+
+            }
+
+
+            // ACEITA OU RECUSADA
+
+            else {
+
+                const resetButton =
+                    createButton(
+                        "↩ Voltar para pendente",
+                        "reset",
+                        () => updateStatus(
+                            suggestion.id,
+                            "pending"
+                        )
+                    );
+
+
+                actions.appendChild(
+                    resetButton
+                );
+
+            }
+
+
+            item.appendChild(info);
+            item.appendChild(actions);
+
+            container.appendChild(item);
+
+        }
+
+
+        function createButton(
+            text,
+            className,
+            callback
+        ) {
+
+            const button =
+                document.createElement("button");
+
+            button.textContent = text;
+
+            button.className =
+                className;
+
+            button.addEventListener(
+                "click",
+                callback
+            );
+
+            return button;
+
+        }
+
+
+        async function updateStatus(
+            id,
+            status
+        ) {
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/api/suggestions/${id}`,
+                        {
+                            method: "PATCH",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                status: status
+                            })
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (
+                    !response.ok ||
+                    !data.success
+                ) {
+
+                    throw new Error(
+                        data.message ||
+                        "Erro ao atualizar."
+                    );
+
+                }
+
+
+                await loadSuggestions();
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                alert(
+                    "Não foi possível atualizar a sugestão."
+                );
+
+            }
+
+        }
+
+
+        function showEmptyMessage(
+            containerId,
+            count,
+            message
+        ) {
+
+            if (count !== 0) {
+                return;
+            }
+
+            document.getElementById(
+                containerId
+            ).innerHTML = `
+                <p class="empty">
+                    ${message}
+                </p>
+            `;
+
+        }
+
+
+        function formatDate(date) {
+
+            return new Date(date)
+                .toLocaleString("pt-BR");
+
+        }
+
+
+        loadSuggestions();
+
+    </script>
+
+</body>
+
+</html>
